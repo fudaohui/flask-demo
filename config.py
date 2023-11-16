@@ -34,10 +34,9 @@ def configure_logging(app: Flask):
 def configure_mysql(app: Flask, config):
     # 从配置中获取MySQL数据库配置
     mysql_config = config.get('mysqlDatabase', {})
-
     # 配置MySQL连接字符串
     mysql_uri = f"mysql+pymysql://{mysql_config['username']}:{mysql_config['password']}@{mysql_config['host']}:{mysql_config['port']}/{mysql_config['dbname']}"
-
     # 配置Flask应用程序
     app.config['SQLALCHEMY_DATABASE_URI'] = mysql_uri
+    # 禁用Flask - SQLAlchemy的跟踪修改功能
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

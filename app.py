@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from nacos import NacosClient
 from sqlalchemy import text
+from models.module import db
 
 from config import NacosConfig, configure_logging, configure_mysql
 
@@ -26,8 +27,8 @@ nacos_config = client.get_config(NacosConfig.NACOS_DATA_ID, NacosConfig.NACOS_GR
 config = json.loads(nacos_config)
 configure_mysql(app, config)
 # 初始化数据库
-db = SQLAlchemy(app)
-test_database_connection()
+db.init_app(app)
+# test_database_connection()
 
 
 if __name__ == '__main__':
