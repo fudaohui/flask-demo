@@ -4,14 +4,11 @@ import os
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask
-from flask.logging import default_handler
 
 
 class AppConfig:
     # 其他应用配置
     APP_NAME = 'pythonbbs'
-    LOG_FILE = f"{APP_NAME}.log"
-    LOG_LEVEL = 'INFO'
 
 
 class NacosConfig:
@@ -23,10 +20,24 @@ class NacosConfig:
     NACOS_GROUP = os.environ.get('NACOS_GROUP', 'DEFAULT_GROUP')
 
 
-def configure_logging():
-    # 配置日志
-    logging.basicConfig(filename='app.log', level=logging.INFO,
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+
+def get_filelog_handler():
+    # 创建一个RotatingFileHandler对象
+    file_handler = RotatingFileHandler('app.log', maxBytes=163840, backupCount=20, encoding='utf-8')
+    # 设置handler级别为INFO
+    file_handler.setLevel(logging.INFO)
+    # 将日志格式对象添加到handler中
+    file_handler.setFormatter(log_formatter)
+    return file_handler
+
+
+def get_consolelog_handler():
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(log_formatter)
+    return console_handler
 
 
 def configure_mysql(app: Flask, config):
