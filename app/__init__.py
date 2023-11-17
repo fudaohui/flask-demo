@@ -4,7 +4,7 @@ import logging
 from flask import Flask
 from nacos import NacosClient
 
-from app.blueprints.user import user_blueprint
+from app.api.user_api import user_blueprint
 from app.config import NacosConfig, configure_mysql, get_filelog_handler, get_consolelog_handler
 from app.extensions import db
 
