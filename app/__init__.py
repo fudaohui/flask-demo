@@ -5,8 +5,8 @@ from flask import Flask
 from nacos import NacosClient
 
 from app.api.user_api import user_blueprint
-from app.config import NacosConfig, configure_mysql, get_filelog_handler, get_consolelog_handler
-from app.extensions import db
+from app.config import NacosConfig, configure_mysql, get_filelog_handler, get_consolelog_handler, configure_redis_single
+from app.extensions import *
 
 
 def create_app():
@@ -26,8 +26,10 @@ def create_app():
     nacos_config = client.get_config(NacosConfig.NACOS_DATA_ID, NacosConfig.NACOS_GROUP)
     config = json.loads(nacos_config)
     configure_mysql(app, config)
+    configure_redis_single(app,config)
     # 初始化数据库
     db.init_app(app)
+    redis_client.init_app(app)
 
     # 注册蓝图
     app.register_blueprint(user_blueprint)
