@@ -1,8 +1,10 @@
 # config.py
 import logging
 import os
+from logging.handlers import RotatingFileHandler
 
 from flask import Flask
+from flask.logging import default_handler
 
 
 class AppConfig:
@@ -21,14 +23,10 @@ class NacosConfig:
     NACOS_GROUP = os.environ.get('NACOS_GROUP', 'DEFAULT_GROUP')
 
 
-def configure_logging(app: Flask):
-    # 配置日志路径和格式
-    logging.basicConfig(filename='app.log', level=logging.INFO)
-    handler = logging.StreamHandler()
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
+def configure_logging():
+    # 配置日志
+    logging.basicConfig(filename='app.log', level=logging.INFO,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 def configure_mysql(app: Flask, config):
