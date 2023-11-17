@@ -4,7 +4,7 @@ from flask import Blueprint, request
 
 from ..models.module import Student
 from ..utils.helpers import generate_response
-from ..extensions import db
+from ..services import user_api_service
 
 user_blueprint = Blueprint("user", __name__, url_prefix="/user")
 
@@ -19,10 +19,5 @@ def add_user():
     if not name:
         return generate_response(500, "用户名为空")
     student = Student(name=name)
-    try:
-        db.session.add(student)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        return generate_response(500, "回滚啦")
+    user_api_service.add_user(student)
     return generate_response(200, "成功")
